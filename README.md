@@ -59,7 +59,6 @@ Resilient Processing Fail-safe
 To ensure the application remains functional in offline or low-bandwidth dev environments without active third-party API keys, NAGARWATCH includes a graceful simulation fallback mode. If OPENROUTER_API_KEY is missing or unreachable, the platform automatically switches to local simulation, mocking high-fidelity assistant responses and database sweeps without throwing blocking errors.
 
 📁 Project Structure
-Plaintext
 NAGARWATCH/
 ├── backend/                        # Express API Server & Data Layer
 │   ├── db/
@@ -108,8 +107,6 @@ NAGARWATCH/
 │   └── vite.config.js              # Vite bundler configuration
 │
 └── README.md                       # Project Documentation
-
-
 🏁 Local Development Setup
 Prerequisites
 Node.js (v18+ LTS)
