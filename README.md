@@ -59,54 +59,10 @@ Resilient Processing Fail-safe
 To ensure the application remains functional in offline or low-bandwidth dev environments without active third-party API keys, NAGARWATCH includes a graceful simulation fallback mode. If OPENROUTER_API_KEY is missing or unreachable, the platform automatically switches to local simulation, mocking high-fidelity assistant responses and database sweeps without throwing blocking errors.
 
 📁 Project Structure
-NAGARWATCH/
-├── backend/                        # Express API Server & Data Layer
-│   ├── db/
-│   │   ├── schema.sql              # PostGIS schema, indexes, and audit table
-│   │   └── seed.sql                # Synthetic demo dataset (FIRs, units, mock users)
-│   ├── scripts/                    # Utility scripts for hashing and seeding
-│   ├── src/
-│   │   ├── config/
-│   │   │   └── db.js               # Postgres connection pool configuration
-│   │   ├── middleware/
-│   │   │   ├── auditLog.js         # WORM audit logging middleware
-│   │   │   ├── piiRedaction.js     # Automatic PII masking engine
-│   │   │   └── rbac.js             # Tier-based access control middleware
-│   │   ├── routes/
-│   │   │   ├── ai.js               # AI assistant proxy endpoints
-│   │   │   ├── analytics.js        # Crime trend aggregations
-│   │   │   ├── audit.js            # System audit trail endpoints
-│   │   │   ├── auth.js             # Authentication & token issuance
-│   │   │   ├── dashboard.js        # Summary metrics endpoints
-│   │   │   ├── fir.js              # Case search & spatial lookup
-│   │   │   ├── linkAnalysis.js     # Co-accused graph generator
-│   │   │   └── map.js              # PostGIS spatial map endpoints
-│   │   └── server.js               # Primary Express app entry point
-│   ├── .env.example                # Template for environment configuration
-│   └── package.json                # Backend Node.js dependencies
-│
-├── frontend/                       # React + Vite Frontend Application
-│   ├── src/
-│   │   ├── components/
-│   │   │   └── Shell.jsx           # Master UI layout & navigation
-│   │   ├── pages/
-│   │   │   ├── AIAssistant.jsx     # AI Query Assistant Interface
-│   │   │   ├── AuditLog.jsx        # System Audit Viewer
-│   │   │   ├── CrimeAnalytics.jsx  # Trend Analysis & Statistics
-│   │   │   ├── Dashboard.jsx       # Executive Summary View
-│   │   │   ├── FIRSearch.jsx       # Case lookup & PII view
-│   │   │   ├── LinkAnalysis.jsx    # Criminal Network Graph
-│   │   │   ├── Login.jsx           # Role-based sign-in panel
-│   │   │   └── MapView.jsx         # PostGIS Hotspot Map
-│   │   ├── styles/
-│   │   │   └── tokens.css          # Global design tokens
-│   │   ├── api.js                  # Axios/Fetch API client wrapper
-│   │   ├── App.jsx                 # Application layout & routing
-│   │   └── main.jsx                # React entry point
-│   ├── package.json                # Frontend Node.js dependencies
-│   └── vite.config.js              # Vite bundler configuration
-│
-└── README.md                       # Project Documentation
+<img width="516" height="376" alt="image" src="https://github.com/user-attachments/assets/f10f75bd-de85-40fe-a6f8-723c4e60de71" />
+<img width="461" height="332" alt="image" src="https://github.com/user-attachments/assets/74c4f13f-79f3-43af-b674-d1b213d771f9" />
+
+
 🏁 Local Development Setup
 Prerequisites
 Node.js (v18+ LTS)
