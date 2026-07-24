@@ -59,6 +59,8 @@ Resilient Processing Fail-safe
 To ensure the application remains functional in offline or low-bandwidth dev environments without active third-party API keys, NAGARWATCH includes a graceful simulation fallback mode. If OPENROUTER_API_KEY is missing or unreachable, the platform automatically switches to local simulation, mocking high-fidelity assistant responses and database sweeps without throwing blocking errors.
 
 📁 Project Structure
+
+
 <img width="516" height="376" alt="image" src="https://github.com/user-attachments/assets/f10f75bd-de85-40fe-a6f8-723c4e60de71" />
 <img width="461" height="332" alt="image" src="https://github.com/user-attachments/assets/74c4f13f-79f3-43af-b674-d1b213d771f9" />
 
