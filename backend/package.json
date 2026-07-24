@@ -1,0 +1,22 @@
+{
+  "name": "nagarwatch-backend",
+  "version": "1.0.0",
+  "description": "NagarWatch API — SCRB Karnataka Police spatial-temporal intelligence platform (backend)",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed:hash": "node scripts/generateDemoHash.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^2.7.0",
+    "pg": "^8.12.0"
+  }
+}

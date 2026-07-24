@@ -1,0 +1,94 @@
+
+
+:root {
+  
+  --navy: #0A192F;
+  --navy-raised: #112843;
+  --offwhite: #F8FAFC;
+  --slate: #E2E8F0;
+  --slate-line: #CBD5E1;
+
+ 
+  --emerald: #10B981;
+  --emerald-soft: #D1FAE5;
+  --amber: #F59E0B;
+  --amber-soft: #FEF3C7;
+  --crimson: #EF4444;
+  --crimson-soft: #FEE2E2;
+
+  /* --- Text --- */
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-on-navy: #F8FAFC;
+  --text-on-navy-muted: #94A3B8;
+
+  /* --- Type --- */
+  --font-display: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', monospace;
+
+  /* --- Spacing / radius --- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-card: 0 1px 2px rgba(10, 25, 47, 0.06), 0 4px 12px rgba(10, 25, 47, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--offwhite);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .display {
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.mono { font-family: var(--font-mono); letter-spacing: 0.01em; }
+
+a { color: inherit; }
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--emerald);
+  outline-offset: 2px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--slate-line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-display);
+}
+.badge--emerald { background: var(--emerald-soft); color: #047857; }
+.badge--amber   { background: var(--amber-soft); color: #B45309; }
+.badge--crimson { background: var(--crimson-soft); color: #B91C1C; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
