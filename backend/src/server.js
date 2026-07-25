@@ -19,7 +19,7 @@ const app = express();
 
 // CORS configuration with credentials support
 app.use(cors({ 
-  origin: process.env.CORS_ORIGIN ? [process.env.CORS_ORIGIN, 'http://localhost:5173'] : ['https://nagarwatch-qohxqhci.onslate.in', 'http://localhost:5173'],
+  origin: true,
   credentials: true 
 }));
 
