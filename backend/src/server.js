@@ -55,7 +55,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error.' });
 });
 
-const PORT = process.env.X_ZOHO_CATALYST_PORT || process.env.PORTprocess.env.PORT || 4000;
+
+const PORT = process.env.X_ZOHO_CATALYST_LISTEN_PORT || process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`NagarWatch backend listening on port ${PORT}`);
 });
