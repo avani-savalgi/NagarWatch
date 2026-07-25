@@ -18,7 +18,7 @@ export default function AuditLog() {
       </h1>
       <p style={{ color: '#64748b', fontSize: 13, marginBottom: 16 }}>
         Immutable (WORM) record of every login, search, export, filter change, and AI query
-        across the platform, per PRD Section 3.2.
+        across the platform.
       </p>
 
       {error && (

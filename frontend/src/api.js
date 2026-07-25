@@ -35,6 +35,8 @@ export const api = {
   getFIRById: (id) => request(`/fir/${id}`),
 
   hotspots: () => request('/map/hotspots'),
+mapCategories: () => request('/map/categories'),
+
   aiQuery: (prompt) => request('/ai/query', { method: 'POST', body: { prompt } }),
   auditLog: () => request('/audit'),
 

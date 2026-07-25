@@ -126,9 +126,23 @@ export default function CrimeAnalytics() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                 <XAxis type="number" dataKey="hour" name="Hour of Day" unit=":00" domain={[0, 23]} stroke="#64748b" fontSize={12} />
                 <YAxis type="number" dataKey="severity" name="Severity Score" domain={[0, 10]} stroke="#64748b" fontSize={12} />
-                <ZAxis range={[100, 300]} />
+                <ZAxis range={[60, 120]} />
                 <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: '#ffffff', borderRadius: 8, border: '1px solid #cbd5e1' }} />
-                <Scatter name="Incidents" data={scatterData} fill="#d97706" />
+                <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+                
+                {/* Standard Severity (Score 3) */}
+                <Scatter 
+                  name="Standard Incidents" 
+                  data={scatterData.filter(d => Number(d.severity) <= 5)} 
+                  fill="#d97706" 
+                />
+                
+                {/* High Severity / Heinous (Score 8) */}
+                <Scatter 
+                  name="High Severity" 
+                  data={scatterData.filter(d => Number(d.severity) > 5)} 
+                  fill="#dc2626" 
+                />
               </ScatterChart>
             </ResponsiveContainer>
           </div>

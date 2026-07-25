@@ -5,7 +5,7 @@ import 'leaflet.heat';
 import { api } from '../api';
 import 'leaflet/dist/leaflet.css';
 
-// Default center coordinates (e.g., Bengaluru)
+// Default center coordinates (Bengaluru)
 const DEFAULT_CENTER = [12.9716, 77.5946];
 const DEFAULT_ZOOM = 11;
 
@@ -45,20 +45,8 @@ function MapControls({ onResetView }) {
       border: '1px solid #cbd5e1',
       boxShadow: '0 2px 4px rgba(0,0,0,0.08)'
     }}>
-      <button
-        onClick={() => map.zoomIn()}
-        title="Zoom In"
-        style={controlButtonStyle}
-      >
-        ＋
-      </button>
-      <button
-        onClick={() => map.zoomOut()}
-        title="Zoom Out"
-        style={controlButtonStyle}
-      >
-        －
-      </button>
+      <button onClick={() => map.zoomIn()} title="Zoom In" style={controlButtonStyle}>＋</button>
+      <button onClick={() => map.zoomOut()} title="Zoom Out" style={controlButtonStyle}>－</button>
       <button
         onClick={() => {
           map.flyTo(DEFAULT_CENTER, DEFAULT_ZOOM, { duration: 1.2 });
@@ -123,6 +111,7 @@ function HeatmapLayer({ points }) {
 
 export default function MapView() {
   const [hotspots, setHotspots] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -132,20 +121,37 @@ export default function MapView() {
   const [onlyHeinous, setOnlyHeinous] = useState(false);
   const [viewMode, setViewMode] = useState('HEATMAP');
 
+  // Load hotspots and dynamic categories on mount
   useEffect(() => {
-    async function fetchHotspots() {
+    async function initMapData() {
       try {
         setLoading(true);
+        
+        // 1. Fetch Hotspot Points
         const data = await api.hotspots();
         const list = Array.isArray(data) ? data : (data.hotspots || data.data || []);
         setHotspots(list);
+
+        // 2. Fetch Dynamic Offence Categories from API
+        if (api.mapCategories) {
+          const cats = await api.mapCategories();
+          if (Array.isArray(cats)) setCategoriesList(cats);
+        } else {
+          // Fallback fetch if api.mapCategories helper isn't declared in api.js
+          const token = localStorage.getItem('token');
+          const res = await fetch('http://localhost:4000/api/map/categories', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const catData = await res.json();
+          if (Array.isArray(catData)) setCategoriesList(catData);
+        }
       } catch (err) {
         setError(err.message || 'Failed to fetch map data');
       } finally {
         setLoading(false);
       }
     }
-    fetchHotspots();
+    initMapData();
   }, []);
 
   const filteredHotspots = hotspots.filter((item) => {
@@ -158,11 +164,18 @@ export default function MapView() {
     if (onlyHeinous && !item.isheinous) return false;
 
     if (timeWindow !== 'ALL' && timeWindow !== 'All Time' && item.dateofoccurrence) {
-      const occurrenceDate = new Date(item.dateofoccurrence);
-      const diffDays = (new Date() - occurrenceDate) / (1000 * 60 * 60 * 24);
-      if (timeWindow === '30' && diffDays > 30) return false;
-      if (timeWindow === '90' && diffDays > 90) return false;
-      if (timeWindow === '365' && diffDays > 365) return false;
+        const occurrenceDate = new Date(item.dateofoccurrence);
+        const now = new Date();
+
+        if (isNaN(occurrenceDate.getTime())) return false;
+
+        const diffDays = (now - occurrenceDate) / (1000 * 60 * 60 * 24);
+        const maxDays = parseInt(timeWindow, 10);
+
+  // Filter out records older than maxDays OR future-dated records (diffDays < 0)
+        if (!isNaN(maxDays) && (diffDays > maxDays || diffDays < 0)) {
+          return false;
+        }
     }
 
     return true;
@@ -200,18 +213,20 @@ export default function MapView() {
         gap: 16,
         fontSize: 13
       }}>
+        {/* Dynamic Category Dropdown */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <label style={{ fontWeight: 600, color: '#0f172a' }}>Offence Category:</label>
           <select 
             value={category} 
             onChange={(e) => setCategory(e.target.value)} 
-            style={selectStyle}
+            style={{ ...selectStyle, maxWidth: 220 }}
           >
             <option value="ALL">All Categories</option>
-            <option value="General">General</option>
-            <option value="Theft">Theft / Burglary</option>
-            <option value="Cybercrime">Cybercrime</option>
-            <option value="Assault">Assault</option>
+            {categoriesList.map((cat, idx) => (
+              <option key={idx} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -222,10 +237,13 @@ export default function MapView() {
             onChange={(e) => setTimeWindow(e.target.value)} 
             style={selectStyle}
           >
-            <option value="ALL">All Time</option>
-            <option value="30">Last 30 Days</option>
-            <option value="90">Last 90 Days</option>
-            <option value="365">Past Year</option>
+              <option value="ALL">All Time</option>
+              <option value="30">Last 30 Days</option>
+              <option value="90">Last 90 Days</option>
+              <option value="180">Last 6 Months</option>
+              <option value="365">Past Year</option>
+              <option value="1095">Past 3 Years</option>
+              <option value="1825">Past 5 Years</option>
           </select>
         </div>
 
@@ -275,11 +293,11 @@ export default function MapView() {
           center={DEFAULT_CENTER} 
           zoom={DEFAULT_ZOOM} 
           style={{ height: '100%', width: '100%' }}
-          zoomControl={false}              // We render clean custom zoom buttons
-          scrollWheelZoom="center"         // Centers trackpad zoom smoothly
-          smoothWheelZoom={true}           // Smooth inertia trackpad zooming
-          inertia={true}                   // Kinetic momentum panning
-          inertiaDeceleration={3000}       // Natural deceleration for trackpads
+          zoomControl={false}
+          scrollWheelZoom="center"
+          smoothWheelZoom={true}
+          inertia={true}
+          inertiaDeceleration={3000}
           touchZoom={true}
           doubleClickZoom={true}
         >
@@ -288,7 +306,6 @@ export default function MapView() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          {/* Custom Navigation Overlay */}
           <MapControls />
 
           {/* Render Heatmap Gradient Layer */}
@@ -300,8 +317,8 @@ export default function MapView() {
               const { lat, lng } = getCoords(point);
               if (isNaN(lat) || isNaN(lng)) return null;
 
-              const offsetLat = lat + (index * 0.003 - 0.003);
-              const offsetLng = lng + (index * 0.003 - 0.003);
+              const offsetLat = lat + (index * 0.00005 - 0.000025);
+              const offsetLng = lng + (index * 0.00005 - 0.000025);
 
               return (
                 <Marker key={point.firid || point.id || index} position={[offsetLat, offsetLng]} icon={orangeIcon}>

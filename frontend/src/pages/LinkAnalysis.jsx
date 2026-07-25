@@ -74,7 +74,7 @@ export default function LinkAnalysis() {
             value={accusedId}
             onChange={(e) => setAccusedId(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && load()}
-            placeholder="Enter Accused Name (e.g. Ramesh) or paste accused UUID..."
+            placeholder="Enter Accused Name or paste accused UUID..."
             style={{ 
               flex: 1, 
               padding: '10px 14px', 
@@ -122,17 +122,22 @@ export default function LinkAnalysis() {
               fontSize: 12,
               background: '#ffffff',
               color: '#0f172a',
-              outline: 'none'
+              outline: 'none',
+              maxWidth: 400
             }}
           >
             <option value="">
               {samples.length > 0 ? '-- Select an Accused to test graph --' : 'Loading sample accused...'}
             </option>
-            {samples.map((s) => (
-              <option key={s.accusedid} value={s.accusedid}>
-                {s.accusedname} (ID: {s.accusedid})
-              </option>
-            ))}
+            {samples.map((s) => {
+              const shortId = s.accusedid ? `${s.accusedid.slice(0, 8)}…` : '';
+              const shortFir = s.firnumber || (s.firid ? `FIR #${s.firid.slice(0, 6)}` : '');
+              return (
+                <option key={s.accusedid} value={s.accusedid}>
+                  {s.accusedname} {shortFir ? `(${shortFir})` : ''} - ID: {shortId}
+                </option>
+              );
+            })}
           </select>
         </div>
       </div>

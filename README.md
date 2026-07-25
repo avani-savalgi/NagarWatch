@@ -127,7 +127,6 @@ OPENROUTER_API_KEY="sk-or-v1-your_token_here"
 
 # Defines the default reasoning model for the AI Assistant
 REASONING_MODEL="meta-llama/llama-3.1-8b-instruct:free"
-
 🧪 API Reference & Testing
 You can test the end-to-end pipeline using the React UI:
 
@@ -140,7 +139,6 @@ Explore Hotspot Map: Navigate to Map View to inspect PostGIS spatial pins and ho
 Run Link Analysis: Navigate to Link Analysis, select a sample accused (e.g., Ramesh Kumar or Kiran Alias Bullet), and click Load Graph to inspect network connections.
 
 Query AI Assistant: Open the AI Assistant tab and ask natural language queries (e.g., "Show theft cases in Jayanagar from last week") to execute RAG database lookups.
-
 
 🔧 Troubleshooting & Fallbacks
 Database Connection Errors: Ensure PostgreSQL is running and PostGIS is enabled (CREATE EXTENSION IF NOT EXISTS postgis;). Verify credentials in backend/.env.

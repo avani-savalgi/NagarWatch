@@ -50,7 +50,6 @@ router.get('/monthly-trends', async (req, res, next) => {
   }
 });
 
-// 3. GET /api/analytics/hourly-severity
 router.get('/hourly-severity', async (req, res, next) => {
   try {
     const query = `
@@ -62,7 +61,9 @@ router.get('/hourly-severity', async (req, res, next) => {
         END AS severity,
         firnumber
       FROM fir
-      WHERE dateofoccurrence IS NOT NULL;
+      WHERE dateofoccurrence IS NOT NULL
+      ORDER BY RANDOM()
+      LIMIT 120;
     `;
     const { rows } = await db.query(query);
     res.json(rows);

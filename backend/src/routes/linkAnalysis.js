@@ -7,6 +7,7 @@ const router = express.Router();
 router.use(requireAuth, requireTier('IO_SHO'));
 
 // 1. GET /api/links/samples — Sample accused list for frontend dropdown testing
+// Note: Static routes MUST be placed before dynamic routes (/:query)
 router.get('/samples', async (req, res) => {
   try {
     const { rows } = await pool.query(
@@ -22,7 +23,11 @@ router.get('/samples', async (req, res) => {
 // 2. GET /api/links/:query — Search graph by Accused UUID OR Accused Name
 router.get('/:query', async (req, res) => {
   try {
-    const searchInput = req.params.query.trim();
+    const searchInput = (req.params.query || '').trim();
+
+    if (!searchInput) {
+      return res.status(400).json({ error: 'Search query cannot be empty.' });
+    }
 
     // Check if input matches UUID pattern
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(searchInput);
@@ -62,7 +67,7 @@ router.get('/:query', async (req, res) => {
 
     const nodesMap = new Map();
 
-    // center node
+    // Center node
     nodesMap.set(String(centerId), {
       id: String(centerId),
       label: centerRecord.accusedname,
