@@ -16,12 +16,10 @@ const analyticsRoutes = require('./routes/analytics');
 
 const app = express();
 
+
 // CORS configuration with credentials support
 app.use(cors({ 
-  origin: [
-    'https://nagarwatch-qohxqhci.onslate.in', 
-    'http://localhost:5173'
-  ],
+  origin: process.env.CORS_ORIGIN ? [process.env.CORS_ORIGIN, 'http://localhost:5173'] : ['https://nagarwatch-qohxqhci.onslate.in', 'http://localhost:5173'],
   credentials: true 
 }));
 
