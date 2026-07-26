@@ -1,8 +1,6 @@
 require('dotenv').config();
 //const path = require('path');
 const express = require('express');
-const cors = require('cors');
-
 
 const { requireAuth } = require('./middleware/auth');
 const { piiRedactionMiddleware } = require('./middleware/piiRedaction');
@@ -26,33 +24,6 @@ app.use((req, res, next) => {
   console.log(`[req] ${req.method} ${req.path} origin=${req.headers.origin || 'none'}`);
   next();
 });
-
-const allowedOrigins = (process.env.CORS_ORIGIN || '')
-  .split(',')
-  .map((o) => o.trim())
-  .filter(Boolean);
-
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  }
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(204);
-  }
-  next();
-});
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true
-}));
 
 app.use(express.json({ limit: '1mb' }));
 
