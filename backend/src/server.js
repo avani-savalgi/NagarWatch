@@ -1,5 +1,5 @@
 require('dotenv').config();
-const path = require('path');
+//const path = require('path');
 const express = require('express');
 const cors = require('cors');
 
@@ -74,12 +74,12 @@ protectedRouter.use('/analytics', analyticsRoutes);
 app.use('/api', protectedRouter);
 
 // Serve the built frontend (same-origin — no CORS needed)
-app.use(express.static(path.join(__dirname, '..', 'public')));
+//app.use(express.static(path.join(__dirname, '..', 'public')));
 
-app.get('*', (req, res, next) => {
-  if (req.path.startsWith('/api/')) return next();
-  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
-});
+// app.get('*', (req, res, next) => {
+//   if (req.path.startsWith('/api/')) return next();
+//   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+// });
 
 app.use((req, res) => res.status(404).json({ error: 'Not found.' }));
 
