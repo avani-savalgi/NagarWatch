@@ -16,22 +16,29 @@ const analyticsRoutes = require('./routes/analytics');
 
 const app = express();
 
+// Trust the AppSail proxy so req.ip / X-Forwarded-For resolve correctly
+app.set('trust proxy', 1);
 
-// CORS configuration with credentials support
-app.use(cors({ 
-  origin: true,
-  credentials: true 
+// CORS — restricted to explicit allowed origins via env var
+const allowedOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
 }));
 
 app.use(express.json({ limit: '1mb' }));
 
-// Health Check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'nagarwatch-backend' }));
 
-// Public Routes
 app.use('/api/auth', authRoutes);
 
-// Protected API Router Group
 const protectedRouter = express.Router();
 protectedRouter.use(requireAuth, piiRedactionMiddleware);
 
@@ -43,19 +50,15 @@ protectedRouter.use('/audit', auditRoutes);
 protectedRouter.use('/links', linkAnalysisRoutes);
 protectedRouter.use('/analytics', analyticsRoutes);
 
-// Mount protected router group under /api
 app.use('/api', protectedRouter);
 
-// 404 Handler
 app.use((req, res) => res.status(404).json({ error: 'Not found.' }));
 
-// Global Error Handler
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error('[unhandled error]', err);
   res.status(500).json({ error: 'Internal server error.' });
 });
-
 
 const PORT = process.env.X_ZOHO_CATALYST_LISTEN_PORT || process.env.PORT || 4000;
 app.listen(PORT, () => {
