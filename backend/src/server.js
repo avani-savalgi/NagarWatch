@@ -19,11 +19,30 @@ const app = express();
 // Trust the AppSail proxy so req.ip / X-Forwarded-For resolve correctly
 app.set('trust proxy', 1);
 
-// CORS — restricted to explicit allowed origins via env var
+// Temporary diagnostic logging
+app.use((req, res, next) => {
+  console.log(`[req] ${req.method} ${req.path} origin=${req.headers.origin || 'none'}`);
+  next();
+});
+
 const allowedOrigins = (process.env.CORS_ORIGIN || '')
   .split(',')
   .map((o) => o.trim())
   .filter(Boolean);
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  }
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 app.use(cors({
   origin: (origin, callback) => {
