@@ -106,7 +106,7 @@ export default function LinkAnalysis() {
 
         {/* Quick Testing Dropdown Selector */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12.5, color: '#64748b' }}>
-          <span>🧪 <strong>Sample Accused Quick Test:</strong></span>
+          <span>🧪 <strong>Accused Quick Test:</strong></span>
           <select
             onChange={(e) => {
               const val = e.target.value;
